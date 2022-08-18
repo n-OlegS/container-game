@@ -1,0 +1,53 @@
+{
+  "pid": 0,
+  "playernum": 3,
+  "cache": {
+    "containers": {
+      "0": 1,
+      "1": 15,
+      "etc": "etc"
+    },
+    "plants": "same as containers",
+    "warehouses": 12
+  },
+
+  "island": ["pid-0 container colors - list", "pid-1 container colors - list", "etc"],
+
+  "pending": {
+    "0": 2,
+    "1": 0,
+    "2": -2,
+    "pid": "balance"
+  },
+
+  "entities": {
+    "0": {
+      "general": {
+        "debts": 0,
+        "warehouse prices": [4, 5, 6, 7],
+        "plant prices": [6, 9, 12]
+      },
+
+      "ship": {"location": "0-6", "cargo": [0, 0, 0, "colors"]},
+
+      "port": {
+        "plants": {
+          "0": 1,
+          "1": 1,
+          "2": 0,
+          "etc": "etc"
+        },
+
+        "warehouses": 3,
+
+        "factory shop": {
+          "price": "colors"
+        },
+
+        "port shop": {
+          "price": "colors"
+        }
+      }
+    }
+  }
+}
