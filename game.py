@@ -106,6 +106,5 @@ def init_state(player_num):
 
     return state
 
-
-with open("/Users/oleg/PycharmProjects/container_v2/state_3p.json", 'w') as f:
-    json.dump(init_state(3), f)
+# with open("/Users/oleg/PycharmProjects/container_v2/state_3p.json", 'w') as f:
+#    json.dump(init_state(3), f)

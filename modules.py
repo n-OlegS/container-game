@@ -29,10 +29,11 @@ class Cache:
             # accepts [0, 0, 0, 1, 2, 2, 3] etc
             out = []
             for elem in order:
-                if len(self.containers[elem] == 0): return None
+                if self.containers[elem] == 0:
+                    return None
                 else:
                     out.append(self.containers[elem])
-                    del self.containers[elem][0]
+                    self.containers[elem] -= 1
 
             return out
 
@@ -145,16 +146,17 @@ class Player:
         if self.pid == 0:
             pay_pid = self.player_num - 1
         else:
-            pay_pid = self.pid - 1
+            pay_pid = int(self.pid) - 1
 
         if self.bank is None: return 1
 
-        if self.port.factoryShop.total_items + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount:
-            self.bank.transact(self.pid, pay_pid, 1)
+        if self.port.factoryShop.total_items + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
+            self.bank.transact(int(self.pid), pay_pid, 1)
             package = self.cache.pop(self.port.get_active_plants()[1])
             self.port.factoryShop.add_containers(package)
         else:
-            if preffered is None or len(preffered) + self.port.factoryShop.total_items != 2 * self.port.plant_amount:
+            if preffered is None or len(preffered) + self.port.factoryShop.total_items != 2 * self.port.plant_amount():
+                print("FUCK")
                 return 1
 
             package = []
@@ -163,10 +165,12 @@ class Player:
                 if not (self.port.plants[c] == 1 and len(self.cache.containers[c]) >= 1): return 1
                 package.append(c)
 
-            package = self.cache.pop(package) # Maybe?
+            package = self.cache.pop(package)  # Maybe?
             self.port.factoryShop.add_containers(package)
 
             self.bank.transact(self.pid, pay_pid, 1)
+
+        return 0
 
     def balance_fshop(self, prices):
         if self.port.factoryShop.balance(prices) == 1: return 1

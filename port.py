@@ -13,8 +13,14 @@ class Port:
 
         # See container color scheme
         self.plants = plants
-        self.plant_amount = len([x for x in dump_dict(plants) if x == 1])
+        # self.plant_amount = len([x for x in dump_dict(plants) if x == 1])
         self.warehouses = warehouses
+
+    def plant_amount(self):
+        total = 0
+        for key in self.plants:
+            total += self.plants[key]
+        return total
 
     def get_active_plants(self):
         amount = 0
@@ -77,7 +83,7 @@ class factoryShop:
         return []
 
     def add_containers(self, containers):
-        self.items[1] += containers
+        self.items["1"] += containers
         self.total_items += len(containers)
 
 
