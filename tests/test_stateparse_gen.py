@@ -41,5 +41,15 @@ class MyTestCase(unittest.TestCase):
         self.assertIsInstance(pshop.items, dict)
         self.assertEqual(pshop.total_items, 0)
 
+        cache = class_tup[1]
+        self.assertIsInstance(cache, Cache)
+        self.assertEqual(cache.warehouses, 9)
+        self.assertIsInstance(cache.plants, dict)
+        self.assertIsInstance(cache.containers, dict)
+
+        island = class_tup[2]
+        self.assertIsInstance(island, Island)
+        self.assertIsInstance(island.stock, dict)
+
 if __name__ == '__main__':
     unittest.main()

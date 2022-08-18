@@ -170,5 +170,3 @@ class Player:
 
     def balance_fshop(self, prices):
         if self.port.factoryShop.balance(prices) == 1: return 1
-
-
