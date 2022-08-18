@@ -150,13 +150,13 @@ class Player:
 
         if self.bank is None: return 1
 
-        if self.port.factoryShop.total_items + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
+        if self.port.factoryShop.total_items() + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
             self.bank.transact(int(self.pid), pay_pid, 1)
             package = self.cache.pop(self.port.get_active_plants()[1])
             self.port.factoryShop.add_containers(package)
         else:
-            if preffered is None or len(preffered) + self.port.factoryShop.total_items != 2 * self.port.plant_amount():
-                print("FUCK")
+            if preffered is None or len(
+                    preffered) + self.port.factoryShop.total_items() != 2 * self.port.plant_amount():
                 return 1
 
             package = []

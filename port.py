@@ -43,14 +43,18 @@ class factoryShop:
             "4": []
         }
 
-        self.total_items = 0
-
         for price in color_d:
             if len(color_d[price]) == 0: continue
             out = [Container(color) for color in color_d[price]]
             self.items[price] = out
 
-        self.total_items = sum(len(self.items[x]) for x in self.items)
+        # self.total_items = sum(len(self.items[x]) for x in self.items)
+
+    def total_items(self):
+        total = 0
+        for key in self.items:
+            total += len(self.items[key])
+        return total
 
     def balance(self, prices):
         containers_d = self.items.copy()
@@ -84,7 +88,6 @@ class factoryShop:
 
     def add_containers(self, containers):
         self.items["1"] += containers
-        self.total_items += len(containers)
 
 
 class portShop:
