@@ -47,15 +47,15 @@ class MyTestCase(unittest.TestCase):
         player.port.factoryShop.items["1"] = [0, 0, 1, 2, 2]
         player.money = 1
 
-        self.assertEqual(player.manufacture(), 1)
-        self.assertEqual(player.manufacture(preffered=[0, 1]), 1)
-        self.assertEqual(player.manufacture(preffered=[0, 3]), 1)
+        self.assertNotEqual(player.manufacture(), 0)
+        self.assertNotEqual(player.manufacture(preffered=[0, 1]), 0)
+        self.assertNotEqual(player.manufacture(preffered=[0, 3]), 0)
 
         cache.containers["0"] = 0
 
-        self.assertEqual(player.manufacture(preffered=[0, 1]), 1)
-        self.assertEqual(player.manufacture(preffered=[0]), 1)
-        self.assertEqual(player.manufacture(preffered=[3]), 1)
+        self.assertNotEqual(player.manufacture(preffered=[0, 1]), 0)
+        self.assertNotEqual(player.manufacture(preffered=[0]), 0)
+        self.assertNotEqual(player.manufacture(preffered=[3]), 0)
 
         # TEST CASE 3
 
