@@ -123,9 +123,11 @@ class Player:
 
             return 0
 
-        return 1
+        return 2
 
     def pay_debt(self):
+        if self.debts == 0: return 0
+
         if self.money >= 1:
             self.money -= 1
 
@@ -134,6 +136,8 @@ class Player:
         elif self.debts < 2:
             self.take_debt()
             self.money -= 1
+
+            return 1
 
         else:
             pass
@@ -148,7 +152,7 @@ class Player:
         else:
             pay_pid = int(self.pid) - 1
 
-        if self.bank is None: return 1
+        if self.bank is None: return 2
 
         if self.port.factoryShop.total_items() + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
             self.bank.transact(int(self.pid), pay_pid, 1)
@@ -157,12 +161,12 @@ class Player:
         else:
             if preffered is None or len(
                     preffered) + self.port.factoryShop.total_items() != 2 * self.port.plant_amount():
-                return 1
+                return 3
 
             package = []
 
             for c in preffered:
-                if not (self.port.plants[c] == 1 and len(self.cache.containers[c]) >= 1): return 1
+                if not (self.port.plants[c] == 1 and len(self.cache.containers[c]) >= 1): return 3
                 package.append(c)
 
             package = self.cache.pop(package)  # Maybe?
@@ -174,3 +178,4 @@ class Player:
 
     def balance_fshop(self, prices):
         if self.port.factoryShop.balance(prices) == 1: return 1
+        return 0
