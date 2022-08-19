@@ -6,7 +6,6 @@ class Bank:
         self.players = players
 
     def transact(self, pid_1, pid_2, amount):
-        assert self.players[pid_1].money >= amount
         assert pid_1 < len(self.players) and pid_2 < len(self.players)
 
         self.players[pid_1].money -= amount
@@ -178,4 +177,14 @@ class Player:
 
     def balance_fshop(self, prices):
         if self.port.factoryShop.balance(prices) == 1: return 1
+        return 0
+
+    def purchase_to_p(self, pid, colors):
+        if self.bank.players[pid].factoryShop.check_stock(colors): return 1
+        package_tup = self.bank.players[pid].port.factoryShop.package(colors)
+        if package_tup[0] < self.money: return 2
+
+        self.bank.transact(self.pid, pid, package_tup[0])
+        self.bank.fact_to_port(pid, self.pid, package_tup[1])
+
         return 0
