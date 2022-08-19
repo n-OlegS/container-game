@@ -39,10 +39,10 @@ state["pending"][str(pid)] = 0
 ui = UI(player)
 
 command_dict = {
-    "take": lambda _: ui.take_debt(),
-    "return": lambda _: ui.return_debt(),
-    "man": lambda _: ui.manufacture(),
-    "manufacture": lambda _: ui.manufacture()
+    "take": lambda: ui.take_debt(),
+    "return": lambda: ui.return_debt(),
+    "man": lambda: ui.manufacture(),
+    "manufacture": lambda: ui.manufacture()
 }
 
 for _ in range(player.debts):
@@ -62,7 +62,7 @@ while i < 2:
         2 - OK, no need to deduct turn
         """
 
-        code = command_dict[command](0)
+        code = command_dict[command]()
 
         if code == 0:
             i += 1

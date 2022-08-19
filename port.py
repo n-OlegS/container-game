@@ -1,9 +1,4 @@
-class Container:
-    # Color types: 0 - black, 1 - yellow, 2 - gray, 3 - blue, 4 - brown
-
-    def __init__(self, color):
-        self.color = color
-
+# Color types: 0 - black, 1 - yellow, 2 - gray, 3 - blue, 4 - brown
 
 class Port:
     def __init__(self, cache, plants, warehouses, port_stats, fshop_stats):
@@ -114,22 +109,34 @@ class factoryShop:
     def add_containers(self, containers):
         self.items["1"] += containers
 
+    def check_stock(self, request):
+        stock = dump_dict(self.items).copy()
+        for elem in request:
+            if elem not in stock:
+                return 1
+            else:
+                stock.remove(elem)
+        return 0
+
+    def package(self, request):
+        total = 0
+        package = []
+
+        for item in request:
+            for price in self.items:
+                if item in self.items[price]:
+                    package.append((price, item))
+                    total += int(price)
+                    break
+
+        # Returns (<total price>, [(price, color)...])
+        return total, package
+
 
 class portShop:
     def __init__(self, color_d):
         self.total_items = 0
-        self.items = {
-            "2": [],
-            "3": [],
-            "4": [],
-            "5": [],
-            "6": []
-        }
-
-        for price in color_d:
-            if len(color_d[price]) == 0: continue
-            out = [Container(color) for color in color_d[price]]
-            self.items[price] = out
+        self.items = color_d
 
 
 def dump_dict(d: dict):
