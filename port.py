@@ -31,18 +31,7 @@ class Port:
 
 class factoryShop:
     def __init__(self, color_d):
-        self.items = {
-            "1": [],
-            "2": [],
-            "3": [],
-            "4": []
-        }
-
-        for price in color_d:
-            if len(color_d[price]) == 0: continue
-            out = [Container(color) for color in color_d[price]]
-            self.items[price] = out
-
+        self.items = color_d
         # self.total_items = sum(len(self.items[x]) for x in self.items)
 
     def total_items(self):

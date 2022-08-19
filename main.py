@@ -1,5 +1,4 @@
 from game import *
-from modules import *
 from ui import UI
 import sys
 
