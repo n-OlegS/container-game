@@ -50,6 +50,9 @@ for _ in range(player.debts):
 
 i = 0
 while i < 2:
+    print(
+        f"\n\n\nMoney: {player.money}\nShip in zone {player.ship.location}\nDebts: {player.debts}\nID: {player.pid}\nNext warehouse will cost ${player.warehouse_prices[1]}\nNext plant will cost ${player.plant_prices[0]}")
+
     command = input("Enter command: ")
 
     try:
@@ -59,7 +62,7 @@ while i < 2:
         2 - OK, no need to deduct turn
         """
 
-        code = command_dict[command]
+        code = command_dict[command](0)
 
         if code == 0:
             i += 1
