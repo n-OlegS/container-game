@@ -56,7 +56,7 @@ class factoryShop:
             total += len(self.items[key])
         return total
 
-    def balance(self, prices):
+    def balance_old(self, prices):
         containers_d = self.items.copy()
         containers = dump_dict(containers_d)
 
@@ -85,6 +85,31 @@ class factoryShop:
             return new_dict
 
         return []
+
+    def balance(self, prices_l):
+        i = 0
+        new_dict = {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": []
+        }
+
+        for price in self.items:
+            if prices_l[i] == '\t':
+                new_dict[price] = self.items[price].copy
+            elif prices_l[i] == '':
+                new_dict[price] = []
+            else:
+                new_dict[price] = price[i].split().copy()
+
+            i += 1
+
+        if dump_dict(self.items) == dump_dict(new_dict):
+            self.items = new_dict.copy()
+            return 0
+        else:
+            return 1
 
     def add_containers(self, containers):
         self.items["1"] += containers
