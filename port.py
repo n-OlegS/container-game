@@ -111,11 +111,17 @@ class factoryShop:
         total = 0
         package = []
 
+        cop = {}
+
+        for price in self.items:
+            cop[price] = self.items[price].copy()
+
         for item in request:
-            for price in self.items:
-                if item in self.items[price]:
-                    package.append((price, item))
+            for price in cop:
+                if item in cop[price]:
+                    package.append((int(price), item))
                     total += int(price)
+                    cop[price].remove(item)
                     break
 
         # Returns (<total price>, [(price, color)...])

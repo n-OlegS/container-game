@@ -2,7 +2,6 @@ print statistics
 
 move ship driver
 auction
-fact to port
 port to ship
 
 endgame check

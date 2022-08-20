@@ -67,5 +67,60 @@ class MyTestCase(unittest.TestCase):
 
         self.assertEqual(player.manufacture(preffered=[1]), 0)
 
+    def test_purchase_to_p(self):
+        # TEST CASE 1
+
+        class_tup = parse(self.return_state())
+        player = class_tup[0][1]
+        cache = class_tup[1]
+        p2 = class_tup[0][0]
+
+        p2.port.factoryShop.items["1"] = [0, 1]
+        p2.port.factoryShop.items["2"] = [1]
+
+        p2.money = 0
+        player.money = 4
+        self.assertEqual(player.purchase_to_p(0, [0, 1, 1]), 0)
+        self.assertEqual(player.money, 0)
+        self.assertEqual(p2.money, 4)
+        self.assertEqual(len(player.port.portShop.items["2"]), 3)
+        self.assertEqual(len(p2.port.factoryShop.items["1"]), 0)
+        self.assertEqual(len(p2.port.factoryShop.items["2"]), 0)
+
+        # TEST CASE 2
+
+        class_tup = parse(self.return_state())
+        player = class_tup[0][1]
+        cache = class_tup[1]
+        p2 = class_tup[0][0]
+
+        p2.port.factoryShop.items["1"] = [0, 1]
+        p2.port.factoryShop.items["2"] = [1]
+
+        p2.money = 0
+        player.money = 4
+        self.assertEqual(player.purchase_to_p(0, [0, 1]), 0)
+        self.assertEqual(player.money, 2)
+        self.assertEqual(p2.money, 2)
+        self.assertEqual(len(player.port.portShop.items["2"]), 2)
+        self.assertEqual(len(p2.port.factoryShop.items["1"]), 0)
+        self.assertEqual(len(p2.port.factoryShop.items["2"]), 1)
+
+        # TEST CASE 3
+
+        class_tup = parse(self.return_state())
+        player = class_tup[0][1]
+        cache = class_tup[1]
+        p2 = class_tup[0][0]
+
+        p2.port.factoryShop.items["1"] = [0, 1]
+        p2.port.factoryShop.items["2"] = [1, 3]
+
+        p2.money = 0
+        player.money = 4
+
+        self.assertEqual(player.purchase_to_p(0, [0, 1, 1, 3]), 2)
+
+
 if __name__ == '__main__':
     unittest.main()

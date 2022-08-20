@@ -6,15 +6,15 @@ class Bank:
         self.players = players
 
     def transact(self, pid_1, pid_2, amount):
-        assert pid_1 < len(self.players) and pid_2 < len(self.players)
+        assert int(pid_1) < len(self.players) and int(pid_2) < len(self.players)
 
-        self.players[pid_1].money -= amount
-        self.players[pid_2].money += amount
+        self.players[int(pid_1)].money -= amount
+        self.players[int(pid_2)].money += amount
 
     def fact_to_port(self, pid_1, pid_2, containers):
         for elem in containers:
-            self.players[pid_1].port.factoryShop.items[elem[0]].remove(elem[1])
-            self.players[pid_2].port.portShop.items[2].append(elem[1])
+            self.players[pid_1].port.factoryShop.items[str(elem[0])].remove(int(elem[1]))
+            self.players[int(pid_2)].port.portShop.items["2"].append(elem[1])
 
 
 class Cache:
@@ -46,8 +46,7 @@ class Cache:
 class Ship:
     def __init__(self, location, cargo):
         self.location = location
-        self.cargo = [Container(color) for color in cargo]
-
+        self.cargo = cargo
 
 class Island:
     def __init__(self, colors):
@@ -180,9 +179,9 @@ class Player:
         return 0
 
     def purchase_to_p(self, pid, colors):
-        if self.bank.players[pid].factoryShop.check_stock(colors): return 1
+        if self.bank.players[pid].port.factoryShop.check_stock(colors): return 1
         package_tup = self.bank.players[pid].port.factoryShop.package(colors)
-        if package_tup[0] < self.money: return 2
+        if package_tup[0] > self.money: return 2
 
         self.bank.transact(self.pid, pid, package_tup[0])
         self.bank.fact_to_port(pid, self.pid, package_tup[1])
