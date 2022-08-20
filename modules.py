@@ -53,17 +53,17 @@ class Ship:
 
 class Island:
     def __init__(self, colors):
-        self.stock = {
-            0: [],
-            1: [],
-            2: [],
-            3: [],
-            4: []
-        }
+        self.stock = {}
 
-        pid = 0
-        for color in colors:
-            self.stock[pid] += color
+        for i in range(len(colors)):
+            self.stock[str(i)] = colors[i]
+
+    def pack(self):
+        out = []
+        for i in self.stock:
+            out.append(self.stock[i])
+
+        return out
 
 
 class Player:

@@ -83,7 +83,9 @@ class UI:
             print("Prices assigned!")
 
     def auction_req(self, colors):
-        bid = input(f"How much money are you willing to bid for containers: {colors}? Type take to take a debt.")
+        print(f"You are: {self.active_pl.pid}")
+        bid = input(
+            f"How much money are you willing to bid for containers: {colors}? Type take to take a debt. You have ${self.active_pl.money}")
         if bid == "take":
             self.take_debt()
             self.auction_req(colors)
@@ -102,7 +104,12 @@ class UI:
                 return bid
 
     def auction_do(self, max_tup, cargo):
-        conf = input(f"Are you willing to accept ${max_tup[1]} from player {max_tup[0]} for cargo {cargo}? y/n")
+        conf = input(
+            f"Are you willing to accept ${max_tup[1]} from player {max_tup[0]} for cargo {cargo}? y/n, take to take debt")
+
+        if conf == "take":
+            self.take_debt()
+            self.auction_do(max_tup, cargo)
 
         if conf == 'y':
             self.active_pl.accept_auction(max_tup, cargo)

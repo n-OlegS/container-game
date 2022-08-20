@@ -47,22 +47,32 @@ command_dict = {
     "take": lambda: ui.take_debt(),
     "return": lambda: ui.return_debt(),
     "man": lambda: ui.manufacture(),
-    "manufacture": lambda: ui.manufacture()
+    "manufacture": lambda: ui.manufacture(),
+    "admin": lambda: [0, 1],
+    "r 0": lambda: 0
 }
 
 if turn_type == 1:
     if secret["doing_auction"] == 0:
+        print("----DOING AUCTION----")
         bid = ui.auction_req(state["auction cargo"])
+        cargo = state["auction cargo"]
         game_type = 1
     else:
         game_type = 0
+        cargo = []
+        bid = 0
 
         maxx = (-1, -1)
         for au_pid in state["bids"]:
+            if not isinstance(state["bids"][au_pid], int): continue
             if state["bids"][au_pid] > maxx[1]:
                 maxx = (au_pid, state["bids"][au_pid])
 
         ui.auction_do(maxx, state["auction cargo"])
+        state["auction cargo"] = []
+        state["bids"] = {}
+        secret["doing_auction"] = 0
 
 
 elif turn_type == 2:
@@ -73,6 +83,7 @@ elif turn_type == 2:
 else:
     bid = None
     game_type = 0
+    cargo = []
 
     for _ in range(player.debts):
         ui.pay_debt()
@@ -80,7 +91,7 @@ else:
     i = 0
     while i < 2:
         print(
-            f"\n\n\nMoney: {player.money}\nShip in zone {player.ship.location}\nDebts: {player.debts}\nID: {player.pid}\nNext warehouse will cost ${player.warehouse_prices[1]}\nNext plant will cost ${player.plant_prices[0]}")
+            f"\n\n\nYou are: {player.pid}\nMoney: {player.money}\nShip in zone {player.ship.location}\nDebts: {player.debts}\nID: {player.pid}\nNext warehouse will cost ${player.warehouse_prices[1]}\nNext plant will cost ${player.plant_prices[0]}")
 
         command = input("Enter command: ")
 
@@ -89,18 +100,29 @@ else:
             0 - OK, deduct turn
             1 - FAILED
             2 - OK, no need to deduct turn
+            3 - starting auction
             """
 
             code = command_dict[command]()
 
             if code == 0:
                 i += 1
+            elif code not in [0, 1, 2]:
+                game_type = 1
+                secret["doing_auction"] = 1
+                cargo = code
+                break
 
         except KeyError:
             print("Invalid command.")
 
-players[str(pid)] = player
+players[pid] = player
 tup = (players, cache, island, bank)
-pid += 1
-if pid == player_num: pid = 0
-package(game_type, bank, bid)
+
+output = package(game_type, tup, bid, player.pid, state)
+
+secret["money"] = player.money
+
+output["auction cargo"] = cargo
+json.dump(output, open('111.json', 'w'))
+json.dump(secret, open('secret.json', 'w'))
