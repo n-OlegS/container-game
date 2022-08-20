@@ -2,8 +2,9 @@ from port import *
 
 
 class Bank:
-    def __init__(self, players):
+    def __init__(self, players, island):
         self.players = players
+        self.island = island
 
     def transact(self, pid_1, pid_2, amount):
         assert int(pid_1) < len(self.players) and int(pid_2) < len(self.players)
@@ -16,6 +17,8 @@ class Bank:
             self.players[pid_1].port.factoryShop.items[str(elem[0])].remove(int(elem[1]))
             self.players[int(pid_2)].port.portShop.items["2"].append(elem[1])
 
+    def to_island(self, pid, cargo):
+        self.island.stock[str(pid)] += cargo
 
 class Cache:
     def __init__(self, containers, plants, warehouses):
@@ -172,6 +175,16 @@ class Player:
 
             self.bank.transact(self.pid, pay_pid, 1)
 
+        # RUN ENDGAME CHECK
+
+        empty = 0
+        for color in self.cache.containers:
+            if self.cache.containers[color] == 0:
+                empty += 1
+
+        if empty >= 2:
+            assert 1 == 0, 'ENDGAME'
+
         return 0
 
     def balance_fshop(self, prices):
@@ -186,4 +199,16 @@ class Player:
         self.bank.transact(self.pid, pid, package_tup[0])
         self.bank.fact_to_port(pid, self.pid, package_tup[1])
 
+        return 0
+
+    def accept_auction(self, max_tup, cargo):
+        pid = max_tup[0]
+        self.bank.transact(pid, self.pid, max_tup[1])
+        self.bank.to_island(pid, cargo)
+
+    def decline_auction(self, price, cargo):
+        if self.money < price: return 1
+
+        self.money -= price
+        self.bank.to_island(self.pid, cargo)
         return 0

@@ -81,3 +81,46 @@ class UI:
             self.balance_f()
         else:
             print("Prices assigned!")
+
+    def auction_req(self, colors):
+        bid = input(f"How much money are you willing to bid for containers: {colors}? Type take to take a debt.")
+        if bid == "take":
+            self.take_debt()
+            self.auction_req(colors)
+        else:
+            try:
+                bid = int(bid)
+            except ValueError:
+                print("Invalid sum.")
+                self.auction_req(colors)
+                return
+
+            if bid > self.active_pl.money:
+                print("Not enough money.")
+                self.auction_req(colors)
+            else:
+                return bid
+
+    def auction_do(self, max_tup, cargo):
+        conf = input(f"Are you willing to accept ${max_tup[1]} from player {max_tup[0]} for cargo {cargo}? y/n")
+
+        if conf == 'y':
+            self.active_pl.accept_auction(max_tup, cargo)
+        elif conf == 'n':
+            self.decline_auction(max_tup, cargo)
+        else:
+            print("Invalid input.")
+            self.auction_do(max_tup, cargo)
+
+    def decline_auction(self, max_tup, cargo):
+        code = self.active_pl.decline_auction(max_tup[1], cargo)
+
+        if code == 0:
+            print("Auction declined")
+            return 0
+        else:
+            print("Cant decline auction: not enough money.")
+            self.active_pl.accept_auction(max_tup, cargo)
+
+    def showendgame(self):
+        pass

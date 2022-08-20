@@ -15,16 +15,22 @@ def parse(state: dict):
 
         players.append(player)
 
-    bank = Bank(players)
+    bank = Bank(players, island)
     for player in players: player.bank = bank
 
     return players, cache, island, bank
 
 
+def package(game_type, class_tuple, bid):
+    pass
+
 def init_state(player_num):
     player_num = int(player_num)
 
-    state = {}
+    state = {"turn type": 0, "auction cargo": [], "bids": {}}
+
+    # Turn types: 0 - regular turn   1 - auction   2 - endgame results
+
     key = {
         "containers": [0, 0, 0, 10, 13, 16],
         "plants": [0, 0, 0, 2, 3, 4],
@@ -57,6 +63,7 @@ def init_state(player_num):
     random_color = list(range(5))
 
     for i in range(player_num):
+        state["bids"][str(i)] = 0
         state["pending"][str(i)] = 0
         color = random_color.pop(random.randint(0, len(random_color) - 1))
         state["entities"][str(i)] = {
