@@ -204,6 +204,7 @@ class Player:
     def accept_auction(self, max_tup, cargo):
         pid = max_tup[0]
         self.bank.transact(pid, self.pid, max_tup[1])
+        self.money += max_tup[1]
         self.bank.to_island(pid, cargo)
 
     def decline_auction(self, price, cargo):

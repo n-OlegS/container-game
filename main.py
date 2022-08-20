@@ -122,6 +122,7 @@ tup = (players, cache, island, bank)
 output = package(game_type, tup, bid, player.pid, state)
 
 secret["money"] = player.money
+output["pending"][str(player.pid)] = 0
 
 output["auction cargo"] = cargo
 json.dump(output, open('111.json', 'w'))

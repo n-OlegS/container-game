@@ -10,13 +10,16 @@ def parse(state: dict):
 
     for pid in state["entities"]:
         entity_dict = state["entities"][pid]
-        player = Player(state["playernum"], pid, entity_dict["general"]["debts"], entity_dict["general"]["warehouse prices"],
+        player = Player(state["playernum"], pid, entity_dict["general"]["debts"],
+                        entity_dict["general"]["warehouse prices"],
                         entity_dict["general"]["plant prices"], entity_dict["ship"], entity_dict["port"], cache)
 
         players.append(player)
 
     bank = Bank(players, island)
     for player in players: player.bank = bank
+
+    players[int(state["pid"])].money += state["pending"][str(state["pid"])]
 
     return players, cache, island, bank
 
