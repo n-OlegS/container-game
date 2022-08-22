@@ -82,6 +82,54 @@ class UI:
         else:
             print("Prices assigned!")
 
+    def balance_p(self):
+        print(
+            "Please assign prices to all containers in the port shop. For each price, enter:\n\ttab + enter to keep same\n\tenter to clear\n\tany colors seperated by a space to assign those colors to a price")
+        prices = []
+        for i in range(2, 7):
+            prices.append(input(f"Assign colors for price {i}: "))
+
+        code = self.active_pl.balance_pshop(prices)
+
+        if code == 1:
+            print("Invalid colors. Try again.")
+            self.balance_p()
+        else:
+            print("Prices assigned!")
+
+    def purchase_to_p(self):
+        pid = input("What player do you want to purchase from?")
+        colors = input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()
+
+        if not 0 <= pid < self.active_pl.player_num:
+            print("Invalid player id.")
+            return 1
+
+        code = self.active_pl.purchase_to_p(pid, colors)
+
+        if code == 1:
+            print("Invalid container colors.")
+            return 1
+        elif code == 2:
+            print("Not enough money.")
+            return 1
+        elif code == 0:
+            print("Containers purchased!")
+            self.balance_p()
+
+    def purchase_to_s(self, pid):
+        colors = input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()
+        code = self.active_pl.purchase_to_s(pid, colors)
+
+        if code == 1:
+            print("Invalid container colors.")
+            return 1
+        elif code == 2:
+            print("Not enough money.")
+            return 1
+        elif code == 0:
+            print("Containers purchased!")
+
     def auction_req(self, colors):
         print(f"You are: {self.active_pl.pid}")
         bid = input(
@@ -128,6 +176,25 @@ class UI:
         else:
             print("Cant decline auction: not enough money.")
             self.active_pl.accept_auction(max_tup, cargo)
+
+    def move_ship(self):
+        zone = input("What zone would you like to move your ship to? ")
+        code = self.active_pl.move_ship(zone)
+
+        if code == -1:
+            print("You cant move your ship to that zone.")
+            return 1
+        elif 0 <= code < 5:
+            print(f"Moved ship to player {zone}'s port.")
+            # run ptos ui
+        elif code == 5:
+            print("Moved ship to the open sea.")
+        elif code == 6:
+            conf = input(
+                "Are you sure you want to go to the island and start an auction? Doing so will finish your turn. Y/n")
+            if conf not in 'yY': return 1
+            print("Your ship has arrived at the island. Starting auction...")
+            return 3
 
     def showendgame(self):
         pass

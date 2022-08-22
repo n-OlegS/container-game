@@ -17,8 +17,14 @@ class Bank:
             self.players[pid_1].port.factoryShop.items[str(elem[0])].remove(int(elem[1]))
             self.players[int(pid_2)].port.portShop.items["2"].append(elem[1])
 
+    def port_to_ship(self, pid_1, pid_2, containers):
+        for elem in containers:
+            self.players[pid_1].port.portShop.items[str(elem[0])].remove(int(elem[1]))
+            self.players[int(pid_2)].ship.cargo.append(elem[1])
+
     def to_island(self, pid, cargo):
         self.island.stock[str(pid)] += cargo
+
 
 class Cache:
     def __init__(self, containers, plants, warehouses):
@@ -191,6 +197,10 @@ class Player:
         if self.port.factoryShop.balance(prices) == 1: return 1
         return 0
 
+    def balance_pshop(self, prices):
+        if self.port.portShop.balance(prices) == 1: return 1
+        return 0
+
     def purchase_to_p(self, pid, colors):
         if self.bank.players[pid].port.factoryShop.check_stock(colors): return 1
         package_tup = self.bank.players[pid].port.factoryShop.package(colors)
@@ -263,8 +273,28 @@ class Player:
             if i < self.player_num:
                 stats += f"Player {i}'s port\n"
             else:
-                stats += 'unavailable\n' \
- \
+                stats += 'unavailable\n'
+
         stats += 'Zone 5: Open sea\nZone 6: Island\n'
 
         return stats
+
+    def purchase_to_s(self, pid, colors):
+        if self.bank.players[pid].port.factoryShop.check_stock(colors): return 1
+        package_tup = self.bank.players[pid].port.factoryShop.package(colors)
+        if package_tup[0] > self.money: return 2
+
+        self.bank.transact(self.pid, pid, package_tup[0])
+        self.bank.port_to_s(pid, self.pid, package_tup[1])
+
+        return 0
+
+    def move_ship(self, zone):
+        current = self.ship.location
+
+        if current != 5 and zone != 5:
+            return -1
+        elif current == 5 == zone:
+            return -1
+        else:
+            return zone

@@ -133,6 +133,60 @@ class portShop:
         self.total_items = 0
         self.items = color_d
 
+    def check_stock(self, request):
+        stock = dump_dict(self.items).copy()
+        for elem in request:
+            if elem not in stock:
+                return 1
+            else:
+                stock.remove(elem)
+        return 0
+
+    def package(self, request):
+        total = 0
+        package = []
+
+        cop = {}
+
+        for price in self.items:
+            cop[price] = self.items[price].copy()
+
+        for item in request:
+            for price in cop:
+                if item in cop[price]:
+                    package.append((int(price), item))
+                    total += int(price)
+                    cop[price].remove(item)
+                    break
+
+        # Returns (<total price>, [(price, color)...])
+        return total, package
+
+    def balance(self, prices_l):
+        i = 0
+        new_dict = {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": []
+        }
+
+        for price in self.items:
+            if prices_l[i] == '\t':
+                new_dict[price] = self.items[price].copy
+            elif prices_l[i] == '':
+                new_dict[price] = []
+            else:
+                new_dict[price] = price[i].split().copy()
+
+            i += 1
+
+        if dump_dict(self.items) == dump_dict(new_dict):
+            self.items = new_dict.copy()
+            return 0
+        else:
+            return 1
+
 
 def dump_dict(d: dict):
     l = []
