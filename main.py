@@ -43,13 +43,16 @@ state["pending"][str(pid)] = 0
 
 ui = UI(player)
 
+print(player.get_own_stats())
+
 command_dict = {
     "take": lambda: ui.take_debt(),
     "return": lambda: ui.return_debt(),
     "man": lambda: ui.manufacture(),
     "manufacture": lambda: ui.manufacture(),
     "admin": lambda: [0, 1],
-    "r 0": lambda: 0
+    "r 0": lambda: 0,
+    "": lambda: 2
 }
 
 if turn_type == 1:
@@ -90,9 +93,6 @@ else:
 
     i = 0
     while i < 2:
-        print(
-            f"\n\n\nYou are: {player.pid}\nMoney: {player.money}\nShip in zone {player.ship.location}\nDebts: {player.debts}\nID: {player.pid}\nNext warehouse will cost ${player.warehouse_prices[1]}\nNext plant will cost ${player.plant_prices[0]}")
-
         command = input("Enter command: ")
 
         try:

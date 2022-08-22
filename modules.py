@@ -213,3 +213,58 @@ class Player:
         self.money -= price
         self.bank.to_island(self.pid, cargo)
         return 0
+
+    def get_own_stats(self):
+        stats = f'\n\n\n----YOUR GENERAL STATS----\nMoney: {self.money}\nDebts:{self.debts}'
+        if bool(len(self.warehouse_prices)):
+            stats += f'\nPid: {self.pid}\n\nNext warehouse will cost ${self.warehouse_prices[0]}\n'
+        else:
+            stats += "Unable to purchase any more warehouses\n"
+
+        if bool(len(self.plant_prices)):
+            stats += f'Next plant will cost ${self.plant_prices[0]}\n'
+        else:
+            stats += f'Unable to purchase any more plants\n'
+
+        stats += '\n-------CACHE STATS-------\n'
+
+        for container in self.cache.containers:
+            stats += f"Containers of color {container} left: {self.cache.containers[container]}\n"
+
+        stats += '\n'
+
+        for plant in self.cache.plants:
+            stats += f"Plants of color {plant} left: {self.cache.plants[plant]}\n"
+
+        stats += f'\nWarehouses left: {self.cache.warehouses}\n'
+
+        stats += '\n--------PORT STATS--------'
+
+        for pid in range(self.player_num):
+            stats += f'\n\nPort of player {pid} stats\n'
+            stats += f'Factory Shop:\n'
+            for price in self.bank.players[pid].port.factoryShop.items:
+                stats += f'\t${price}: {self.bank.players[pid].port.factoryShop.items[price]}\n'
+
+            stats += '\nPort Shop:\n'
+            for price in self.bank.players[pid].port.portShop.items:
+                stats += f'\t${price}: {self.bank.players[pid].port.portShop.items[price]}\n'
+
+            stats += f'Manufacturing plants: {[key for key in self.bank.players[pid].port.plants if self.bank.players[pid].port.plants[key] == 1]}\n'
+
+        stats += '\n--------SHIP STATS--------\n\n'
+
+        for pid in range(self.player_num):
+            stats += f"Player {pid}'s ship is in zone {self.bank.players[pid].ship.location}\n"
+
+        stats += '\nShip Zones:\n\n'
+        for i in range(5):
+            stats += f'Zone {i}: '
+            if i < self.player_num:
+                stats += f"Player {i}'s port\n"
+            else:
+                stats += 'unavailable\n' \
+ \
+        stats += 'Zone 5: Open sea\nZone 6: Island\n'
+
+        return stats
