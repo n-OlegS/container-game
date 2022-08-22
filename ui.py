@@ -186,7 +186,7 @@ class UI:
             return 1
         elif 0 <= code < 5:
             print(f"Moved ship to player {zone}'s port.")
-            # run ptos ui
+            self.purchase_to_s(code)
         elif code == 5:
             print("Moved ship to the open sea.")
         elif code == 6:
@@ -195,6 +195,15 @@ class UI:
             if conf not in 'yY': return 1
             print("Your ship has arrived at the island. Starting auction...")
             return 3
+
+    def help(self):
+        print("List of commands:")
+        print('\ttake: take a loan')
+        print('\treturn: return loan\n\tman/manufacture: manufature available containers')
+        print("\tpurchase: purchase containers from somebody's factory shop")
+        print('\tmove: move your ship from one zone to another\n\thelp: show this text\n')
+
+        return 2
 
     def showendgame(self):
         pass

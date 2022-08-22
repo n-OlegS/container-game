@@ -50,8 +50,10 @@ command_dict = {
     "return": lambda: ui.return_debt(),
     "man": lambda: ui.manufacture(),
     "manufacture": lambda: ui.manufacture(),
-    "admin": lambda: [0, 1],
-    "r 0": lambda: 0,
+    "purchase": lambda: ui.purchase_to_p(),
+    "move": lambda: ui.move_ship(),
+    # "admin --return": lambda: 0,
+    "help": lambda: ui.help(),
     "": lambda: 2
 }
 
