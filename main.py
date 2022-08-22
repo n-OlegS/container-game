@@ -1,3 +1,5 @@
+import random
+
 from game import *
 from ui import UI
 import sys
@@ -24,15 +26,24 @@ turn_type = state["turn type"]
 
 class_tuple = parse(state)
 
-secret_f = open('secret.json', 'r')
-secret = json.load(secret_f)
-
 pid = state["pid"]
+change_generated = False
+
+if state["generated"][str(pid)] == 0:
+    secret_d = {'money': 20, 'doing_auction': 0,
+                'card': state["card list"].pop(random.randint(0, len(state['card list'])))}
+    secret_f = open('secret.json', 'w')
+    json.dump(secret_d, secret_f)
+    change_generated = True
+
 players = class_tuple[0]
 cache = class_tuple[1]
 island = class_tuple[2]
 bank = class_tuple[3]
 player_num = state["playernum"]
+
+secret_f = open('secret.json', 'r')
+secret = json.load(secret_f)
 
 player = players[pid]
 
@@ -43,6 +54,7 @@ state["pending"][str(pid)] = 0
 
 ui = UI(player)
 
+print("generated: ", bool(state["generated"][str(pid)]))
 print(player.get_own_stats())
 
 command_dict = {
@@ -52,7 +64,7 @@ command_dict = {
     "manufacture": lambda: ui.manufacture(),
     "purchase": lambda: ui.purchase_to_p(),
     "move": lambda: ui.move_ship(),
-    # "admin --return": lambda: 0,
+    "r": lambda: 0,
     "help": lambda: ui.help(),
     "": lambda: 2
 }
@@ -127,5 +139,6 @@ secret["money"] = player.money
 output["pending"][str(player.pid)] = 0
 
 output["auction cargo"] = cargo
-json.dump(output, open('111.json', 'w'))
+if change_generated: output["generated"][str(player.pid)] = 1
+json.dump(output, open('111.json', 'w'), indent=4)
 json.dump(secret, open('secret.json', 'w'))

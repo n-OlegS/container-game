@@ -120,6 +120,11 @@ def init_state(player_num):
     state["entities"] = {}
     random_color = list(range(5))
 
+    state["card list"] = [0, 1, 2, 3, 4, 5]
+    state["generated"] = {}
+    for i in range(player_num):
+        state["generated"][str(i)] = 0
+
     for i in range(player_num):
         state["bids"][str(i)] = 0
         state["pending"][str(i)] = 0
@@ -173,4 +178,4 @@ def init_state(player_num):
 
 
 with open("/Users/oleg/PycharmProjects/container_v2/state_3p.json", 'w') as f:
-    json.dump(init_state(3), f)
+    json.dump(init_state(3), f, indent=4)
