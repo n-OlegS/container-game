@@ -191,7 +191,7 @@ class UI:
             print("Moved ship to the open sea.")
         elif code == 6:
             conf = input(
-                "Are you sure you want to go to the island and start an auction? Doing so will finish your turn. Y/n")
+                "Are you sure you want to go to the island and start an auction? Doing so will end your turn. Y/n")
             if conf not in 'yY': return 1
             print("Your ship has arrived at the island. Starting auction...")
             return 3
