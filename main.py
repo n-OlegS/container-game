@@ -32,6 +32,7 @@ change_generated = False
 if state["generated"][str(pid)] == 0:
     card = random.choice(state['card list'])
     state['card list'].remove(card)
+    state['secret'].append(state['card list copy'].index(card))
     secret_d = {'money': 20, 'doing_auction': 0,
                 'card': card}
     secret_f = open('secret.json', 'w')
@@ -95,7 +96,7 @@ if turn_type == 1:
 
 
 elif turn_type == 2:
-    ui.showendgame()
+    ui.showendgame(state['results'])
     quit()
 
 
@@ -117,13 +118,18 @@ else:
             1 - FAILED
             2 - OK, no need to deduct turn
             3 - starting auction
+            4 - starting endgame
             """
 
             code = command_dict[command]()
 
             if code == 0:
                 i += 1
-            elif code not in [0, 1, 2]:
+            elif code == 4:
+                total_score = bank.calculate_endgame()
+                state['results'] = total_score
+                game_type = 2
+            elif code not in [1, 2]:
                 game_type = 1
                 secret["doing_auction"] = 1
                 cargo = code

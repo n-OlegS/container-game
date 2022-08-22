@@ -16,7 +16,7 @@ def parse(state: dict):
 
         players.append(player)
 
-    bank = Bank(players, island)
+    bank = Bank(players, island, state['card list copy'], cache)
     for player in players: player.bank = bank
 
     players[int(state["pid"])].money += state["pending"][str(state["pid"])]
@@ -116,11 +116,14 @@ def init_state(player_num):
     state["island"] = [[] for _ in range(player_num)]
     state["pid"] = 0
     state["playernum"] = player_num
+    state['secret'] = []
+    state['results'] = {}
     state["pending"] = {}
     state["entities"] = {}
     random_color = list(range(5))
 
     state["card list"] = [[0, 1, 2, 3, 4], [4, 0, 1, 2, 3], [3, 4, 0, 1, 2], [2, 3, 4, 0, 1], [1, 2, 3, 4, 0]]
+    state["card list copy"] = [[0, 1, 2, 3, 4], [4, 0, 1, 2, 3], [3, 4, 0, 1, 2], [2, 3, 4, 0, 1], [1, 2, 3, 4, 0]]
     state["generated"] = {}
     for i in range(player_num):
         state["generated"][str(i)] = 0

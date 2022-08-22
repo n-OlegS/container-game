@@ -62,6 +62,8 @@ class UI:
             print(
                 "Invalid preferred containers. This could be becuase:\n\t-You do not have the necessary plants\n\t-The containers you are trying to manufacture have run out\n\t-You have not entered enough containers\n\t")
             self.manufacture()
+        elif code == 4:
+            return 4
         else:
             print("Successfully manufactured all containers!")
             self.balance_f()
@@ -205,5 +207,8 @@ class UI:
 
         return 2
 
-    def showendgame(self):
-        pass
+    def showendgame(self, totals):
+        for i in range(self.active_pl.player_num):
+            print(f'Player {i} finished with ${totals[str(i)]}')
+
+        print("GAME OVER!")

@@ -2,8 +2,11 @@ from port import *
 
 
 class Bank:
-    def __init__(self, players, island):
+    def __init__(self, players, island, card_list, secret_list, cache):
         self.players = players
+        self.cache = cache
+        self.card_list = card_list
+        self.secret_list = secret_list
         self.island = island
 
     def transact(self, pid_1, pid_2, amount):
@@ -24,6 +27,52 @@ class Bank:
 
     def to_island(self, pid, cargo):
         self.island.stock[str(pid)] += cargo
+
+    def calculate_endgame(self):
+        totals = {}
+        prices = {0: 10, 11: 10, 12: 5, 2: 6, 3: 4, 4: 2}
+
+        for pid in range(len(self.players)):
+            player = self.players[pid]
+            card = self.card_list[self.secret_list[pid]]
+            total = 0
+
+            count = len(set(self.island.stock[str(pid)]))
+            if count == 5:
+                double = True
+            else:
+                double = False
+
+            max_col = -1
+            max_count = 0
+            counts = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0}
+
+            for color in self.island.stock[str(pid)]:
+                counts[color] += 1
+                if counts[color] > max_count:
+                    max_count = counts[color]
+                    max_col = color
+
+            self.island.stock[str(pid)] = [x for x in self.island.stock[str(pid)] if x != max_col]
+
+            for i in range(len(card)):
+                color = card[i]
+                if i == 1:
+                    if double:
+                        i = 11
+                    else:
+                        i = 12
+
+                total += prices[i] * self.island.stock[str(pid)].count(color)
+
+            total += player.money
+            total += 3 * len(player.ship.cargo)
+            total += 2 * dump_dict(player.port.portShop.items)
+            total -= 11 * player.debts
+
+            totals[str(pid)] = total
+
+        return totals
 
 
 class Cache:
@@ -190,7 +239,7 @@ class Player:
                 empty += 1
 
         if empty >= 2:
-            assert 1 == 0, 'ENDGAME'
+            return 4
 
         return 0
 
