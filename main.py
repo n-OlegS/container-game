@@ -30,8 +30,10 @@ pid = state["pid"]
 change_generated = False
 
 if state["generated"][str(pid)] == 0:
+    card = random.choice(state['card list'])
+    state['card list'].remove(card)
     secret_d = {'money': 20, 'doing_auction': 0,
-                'card': state["card list"].pop(random.randint(0, len(state['card list'])))}
+                'card': card}
     secret_f = open('secret.json', 'w')
     json.dump(secret_d, secret_f)
     change_generated = True
@@ -48,13 +50,13 @@ secret = json.load(secret_f)
 player = players[pid]
 
 player.money += state["pending"][str(pid)] + secret["money"]
+player.card = secret["card"]
 state["pending"][str(pid)] = 0
 
 # Begin command loop
 
 ui = UI(player)
 
-print("generated: ", bool(state["generated"][str(pid)]))
 print(player.get_own_stats())
 
 command_dict = {

@@ -77,6 +77,7 @@ class Player:
         self.pid = pid
         self.debts = debts
         self.money = 0
+        self.card = None
         self.bank = None
         self.cache = cache
         self.player_num = player_num
@@ -276,6 +277,9 @@ class Player:
                 stats += 'unavailable\n'
 
         stats += 'Zone 5: Open sea\nZone 6: Island\n'
+        stats += '\nContainer colors:\n\t0-Black\n\t1-Brown\n\t2-Purple\n\t3-Yellow\n\t4-Gray\n'
+        stats += f'\nYour card:\n\t$10: {self.card[0]}\n\t$5/10: {self.card[1]}\n\t$6: {self.card[2]}\n\t'
+        stats += f'$4: {self.card[3]}\n\t$2: {self.card[4]}\n'
 
         return stats
 

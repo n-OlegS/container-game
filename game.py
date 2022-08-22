@@ -120,7 +120,7 @@ def init_state(player_num):
     state["entities"] = {}
     random_color = list(range(5))
 
-    state["card list"] = [0, 1, 2, 3, 4, 5]
+    state["card list"] = [[0, 1, 2, 3, 4], [4, 0, 1, 2, 3], [3, 4, 0, 1, 2], [2, 3, 4, 0, 1], [1, 2, 3, 4, 0]]
     state["generated"] = {}
     for i in range(player_num):
         state["generated"][str(i)] = 0
