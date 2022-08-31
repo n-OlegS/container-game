@@ -42,6 +42,37 @@ class UI:
             print("Returned 1 debt for 11 dollars.")
             return 2
 
+    def purchase_warehouse(self):
+        code = self.active_pl.purchase_warehouse()
+
+        if code == 0:
+            print("Warehouse purchased.")
+            return 0
+        elif code == 1:
+            print("Maximum amount of warehouses reached.")
+            return 1
+        else:
+            print("Not enough money.")
+            return 1
+
+    def purchase_plant(self):
+        color = input("What color plant do you want to purchase? ")
+        code = self.active_pl.purchase_plant(color)
+
+        if code == 0:
+            print("Plant purchased.")
+            return 0
+        elif code == 1:
+            print("Maximum amount of plants reached.")
+            return 1
+        elif code == 2:
+            print(
+                "Either you do not have enough money, you already have a plant of this color, or there are no more plants of this color left.")
+            return 1
+        else:
+            print("Invalid color...")
+            return 1
+
     def manufacture(self):
         if self.active_pl.port.factoryShop.total_items() + self.active_pl.port.get_active_plants()[
             0] > 2 * self.active_pl.port.plant_amount():
@@ -66,6 +97,7 @@ class UI:
             return 4
         else:
             print("Successfully manufactured all containers!")
+            print(self.active_pl.port.factoryShop.items)
             self.balance_f()
             return 0
 
@@ -100,10 +132,15 @@ class UI:
             print("Prices assigned!")
 
     def purchase_to_p(self):
-        pid = input("What player do you want to purchase from?")
-        colors = input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()
+        pid = input("What player do you want to purchase from? ")
+        colors = [int(x) for x in
+                  input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()]
 
-        if not 0 <= pid < self.active_pl.player_num:
+        if pid == self.active_pl.pid:
+            print("Can't purchase from own factory.")
+            return 1
+
+        if not 0 <= int(pid) < self.active_pl.player_num:
             print("Invalid player id.")
             return 1
 
@@ -115,20 +152,25 @@ class UI:
         elif code == 2:
             print("Not enough money.")
             return 1
+        elif code == 3:
+            print("Not enough warehouse space.")
+            return 1
         elif code == 0:
             print("Containers purchased!")
             self.balance_p()
+            return 0
 
     def purchase_to_s(self, pid):
-        colors = input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()
+        colors = [int(x) for x in
+                  input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()]
         code = self.active_pl.purchase_to_s(pid, colors)
 
         if code == 1:
             print("Invalid container colors.")
-            return 1
+            self.purchase_to_s(pid)
         elif code == 2:
             print("Not enough money.")
-            return 1
+            self.purchase_to_s(pid)
         elif code == 0:
             print("Containers purchased!")
 
@@ -180,8 +222,12 @@ class UI:
             self.active_pl.accept_auction(max_tup, cargo)
 
     def move_ship(self):
-        zone = input("What zone would you like to move your ship to? ")
-        code = self.active_pl.move_ship(zone)
+        zone = int(input("What zone would you like to move your ship to? "))
+        if zone == int(self.active_pl.pid):
+            print("Cant purchase from own port.")
+            return 1
+
+        code = int(self.active_pl.move_ship(zone))
 
         if code == -1:
             print("You cant move your ship to that zone.")
@@ -189,21 +235,30 @@ class UI:
         elif 0 <= code < 5:
             print(f"Moved ship to player {zone}'s port.")
             self.purchase_to_s(code)
+            return 0
         elif code == 5:
             print("Moved ship to the open sea.")
+            return 0
         elif code == 6:
             conf = input(
                 "Are you sure you want to go to the island and start an auction? Doing so will end your turn. Y/n")
             if conf not in 'yY': return 1
             print("Your ship has arrived at the island. Starting auction...")
-            return 3
+            cargo = self.active_pl.ship.cargo
+            self.active_pl.ship.cargo = []
+            return cargo
+
+    def stats(self):
+        print(self.active_pl.get_own_stats())
+        return 2
 
     def help(self):
         print("List of commands:")
         print('\ttake: take a loan')
         print('\treturn: return loan\n\tman/manufacture: manufature available containers')
         print("\tpurchase: purchase containers from somebody's factory shop")
-        print('\tmove: move your ship from one zone to another\n\thelp: show this text\n')
+        print('\twarehouse: purchase a warehouse\n\tplant: purchase a plant')
+        print('\tmove: move your ship from one zone to another\n\tstats: show the game state\n\thelp: show this text\n')
 
         return 2
 

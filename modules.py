@@ -17,7 +17,7 @@ class Bank:
 
     def fact_to_port(self, pid_1, pid_2, containers):
         for elem in containers:
-            self.players[pid_1].port.factoryShop.items[str(elem[0])].remove(int(elem[1]))
+            self.players[int(pid_1)].port.factoryShop.items[str(elem[0])].remove(int(elem[1]))
             self.players[int(pid_2)].port.portShop.items["2"].append(elem[1])
 
     def port_to_ship(self, pid_1, pid_2, containers):
@@ -81,24 +81,37 @@ class Cache:
         self.plants = plants
         self.warehouses = warehouses
 
-    def pop(self, order):
+    def pop_old(self, order):
         if isinstance(order, list):
             # accepts [0, 0, 0, 1, 2, 2, 3] etc
             out = []
             for elem in order:
-                if self.containers[elem] == 0:
+                if self.containers[str(elem)] == 0:
                     return None
                 else:
-                    out.append(self.containers[elem])
-                    self.containers[elem] -= 1
+                    out.append(self.containers[str(elem)])
+                    self.containers[str(elem)] -= 1
 
             return out
 
-        elif len(self.containers[order]) == 0: return None
+        elif len(self.containers[order]) == 0:
+            return None
         else:
             out = self.containers[order][0]
             del self.containers[order][0]
             return out
+
+    def pop(self, order):
+        print('ORDER-', order)
+        if isinstance(order, list):
+            for elem in order:
+                if elem not in self.containers: raise Exception
+                self.containers[elem] -= 1
+        else:
+            if order not in self.containers: raise Exception
+            self.containers[order] -= 1
+
+        return order
 
 
 class Ship:
@@ -106,12 +119,10 @@ class Ship:
         self.location = location
         self.cargo = cargo
 
-class Island:
-    def __init__(self, colors):
-        self.stock = {}
 
-        for i in range(len(colors)):
-            self.stock[str(i)] = colors[i]
+class Island:
+    def __init__(self, stock):
+        self.stock = stock
 
     def pack(self):
         out = []
@@ -148,18 +159,21 @@ class Player:
 
                 return 0
 
+            return 2
+
         return 1
 
     def purchase_plant(self, color):
         if bool(len(self.plant_prices)):
+            if color not in self.cache.plants: return 3
             if self.money >= self.plant_prices[0] and self.port.plants[color] == 0 and self.cache.plants[color] > 0:
                 self.money -= self.plant_prices[0]
                 self.port.plants[color] = 1
-                self.port.plant_amount += 1
                 self.cache.plants[color] -= 1
                 del self.plant_prices[0]
+                return 0
 
-            return 1
+            return 2
 
         return 1
 
@@ -214,6 +228,8 @@ class Player:
         if self.port.factoryShop.total_items() + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
             self.bank.transact(int(self.pid), pay_pid, 1)
             package = self.cache.pop(self.port.get_active_plants()[1])
+            print(self.port.get_active_plants()[1])
+            print(package)
             self.port.factoryShop.add_containers(package)
         else:
             if preffered is None or len(
@@ -252,8 +268,9 @@ class Player:
         return 0
 
     def purchase_to_p(self, pid, colors):
-        if self.bank.players[pid].port.factoryShop.check_stock(colors): return 1
-        package_tup = self.bank.players[pid].port.factoryShop.package(colors)
+        if len(colors) > self.port.warehouses - self.port.portShop.total_items(): return 3
+        if self.bank.players[int(pid)].port.factoryShop.check_stock(colors): return 1
+        package_tup = self.bank.players[int(pid)].port.factoryShop.package(colors)
         if package_tup[0] > self.money: return 2
 
         self.bank.transact(self.pid, pid, package_tup[0])
@@ -265,7 +282,8 @@ class Player:
         pid = max_tup[0]
         self.bank.transact(pid, self.pid, max_tup[1])
         self.money += max_tup[1]
-        self.bank.to_island(pid, cargo)
+        print(self.bank.island.stock, str(self.pid), cargo)
+        self.bank.island.stock[str(self.pid)] += cargo
 
     def decline_auction(self, price, cargo):
         if self.money < price: return 1
@@ -310,12 +328,16 @@ class Player:
             for price in self.bank.players[pid].port.portShop.items:
                 stats += f'\t${price}: {self.bank.players[pid].port.portShop.items[price]}\n'
 
-            stats += f'Manufacturing plants: {[key for key in self.bank.players[pid].port.plants if self.bank.players[pid].port.plants[key] == 1]}\n'
+            stats += f'Manufacturing plants: {", ".join([key for key in self.bank.players[pid].port.plants if self.bank.players[pid].port.plants[key] == 1])}\n'
+            stats += f'Warehouses: {self.bank.players[pid].port.warehouses}\n'
 
         stats += '\n--------SHIP STATS--------\n\n'
 
         for pid in range(self.player_num):
             stats += f"Player {pid}'s ship is in zone {self.bank.players[pid].ship.location}\n"
+
+        for pid in range(self.player_num):
+            stats += f"Player {pid}'s ship cargo: {self.bank.players[pid].ship.cargo}\n"
 
         stats += '\nShip Zones:\n\n'
         for i in range(5):
@@ -333,21 +355,23 @@ class Player:
         return stats
 
     def purchase_to_s(self, pid, colors):
-        if self.bank.players[pid].port.factoryShop.check_stock(colors): return 1
-        package_tup = self.bank.players[pid].port.factoryShop.package(colors)
+        if self.bank.players[pid].port.portShop.check_stock(colors): return 1
+        package_tup = self.bank.players[pid].port.portShop.package(colors)
         if package_tup[0] > self.money: return 2
 
         self.bank.transact(self.pid, pid, package_tup[0])
-        self.bank.port_to_s(pid, self.pid, package_tup[1])
+        self.bank.port_to_ship(pid, self.pid, package_tup[1])
 
         return 0
 
     def move_ship(self, zone):
         current = self.ship.location
+        print(current, zone)
 
         if current != 5 and zone != 5:
             return -1
         elif current == 5 == zone:
             return -1
         else:
+            self.ship.location = zone
             return zone

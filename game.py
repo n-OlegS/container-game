@@ -16,7 +16,7 @@ def parse(state: dict):
 
         players.append(player)
 
-    bank = Bank(players, island, state['card list copy'], cache)
+    bank = Bank(players, island, state['card list copy'], state['secret'], cache)
     for player in players: player.bank = bank
 
     players[int(state["pid"])].money += state["pending"][str(state["pid"])]
@@ -25,7 +25,7 @@ def parse(state: dict):
 
 
 def package(game_type, class_tuple, bid, pid, old_state):
-    print("PACKAGING WITH PID", pid)
+    print("PACKAGING WITH PID", pid, game_type)
     players = class_tuple[0]
     cache = class_tuple[1]
     island = class_tuple[2]
@@ -43,7 +43,7 @@ def package(game_type, class_tuple, bid, pid, old_state):
     state["cache"]["plants"] = cache.plants
     state["cache"]["warehouses"] = cache.warehouses
 
-    state["island"] = island.pack()
+    state["island"] = island.stock
     state["pid"] = int(pid)
 
     state["playernum"] = len(players)
@@ -113,8 +113,11 @@ def init_state(player_num):
         "warehouses": key["warehouses"][player_num]
     }
 
-    state["island"] = [[] for _ in range(player_num)]
+    state["island"] = {}
+    for i in range(player_num):
+        state["island"][str(i)] = []
     state["pid"] = 0
+    state["turn"] = 1
     state["playernum"] = player_num
     state['secret'] = []
     state['results'] = {}
@@ -180,5 +183,6 @@ def init_state(player_num):
     return state
 
 
-with open("/Users/oleg/PycharmProjects/container_v2/state_3p.json", 'w') as f:
-    json.dump(init_state(3), f, indent=4)
+if __name__ == "__main__":
+    with open("/Users/oleg/PycharmProjects/container_v2/1.json", 'w') as f:
+        json.dump(init_state(3), f, indent=4)

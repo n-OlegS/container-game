@@ -67,7 +67,11 @@ command_dict = {
     "manufacture": lambda: ui.manufacture(),
     "purchase": lambda: ui.purchase_to_p(),
     "move": lambda: ui.move_ship(),
+    "warehouse": lambda: ui.purchase_warehouse(),
+    "plant": lambda: ui.purchase_plant(),
+    "stats": lambda: ui.stats(),
     "r": lambda: 0,
+    "?": lambda: ui.help(),
     "help": lambda: ui.help(),
     "": lambda: 2
 }
@@ -112,32 +116,31 @@ else:
     while i < 2:
         command = input("Enter command: ")
 
-        try:
-            """
-            0 - OK, deduct turn
-            1 - FAILED
-            2 - OK, no need to deduct turn
-            3 - starting auction
-            4 - starting endgame
-            """
-
-            code = command_dict[command]()
-
-            if code == 0:
-                i += 1
-            elif code == 4:
-                total_score = bank.calculate_endgame()
-                state['results'] = total_score
-                game_type = 2
-            elif code not in [1, 2]:
-                game_type = 1
-                secret["doing_auction"] = 1
-                cargo = code
-                break
-
-        except KeyError:
+        if command not in command_dict:
             print("Invalid command.")
+            continue
 
+        """
+        0 - OK, deduct turn
+        1 - FAILED
+        2 - OK, no need to deduct turn
+        3 - starting auction
+        4 - starting endgame
+        """
+
+        code = command_dict[command]()
+
+        if code == 0:
+            i += 1
+        elif code == 4:
+            total_score = bank.calculate_endgame()
+            state['results'] = total_score
+            game_type = 2
+        elif code not in [1, 2]:
+            game_type = 1
+            secret["doing_auction"] = 1
+            cargo = code
+            break
 players[pid] = player
 tup = (players, cache, island, bank)
 
@@ -145,8 +148,10 @@ output = package(game_type, tup, bid, player.pid, state)
 
 secret["money"] = player.money
 output["pending"][str(player.pid)] = 0
+turn = state["turn"] + 1
+output["turn"] = turn
 
 output["auction cargo"] = cargo
 if change_generated: output["generated"][str(player.pid)] = 1
-json.dump(output, open('111.json', 'w'), indent=4)
+json.dump(output, open(f'{turn}.json', 'w'), indent=4)
 json.dump(secret, open('secret.json', 'w'))

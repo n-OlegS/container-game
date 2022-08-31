@@ -72,6 +72,7 @@ class factoryShop:
 
     def balance(self, prices_l):
         i = 0
+        print(prices_l)
         new_dict = {
             "1": [],
             "2": [],
@@ -81,22 +82,24 @@ class factoryShop:
 
         for price in self.items:
             if prices_l[i] == '\t':
-                new_dict[price] = self.items[price].copy
+                new_dict[price] = self.items[price].copy()
             elif prices_l[i] == '':
                 new_dict[price] = []
             else:
-                new_dict[price] = price[i].split().copy()
+                new_dict[price] = [int(x) for x in prices_l[i].split().copy()]
 
             i += 1
 
-        if dump_dict(self.items) == dump_dict(new_dict):
+        print('\n\n', self.items, new_dict, dump_dict(self.items), dump_dict(new_dict), '\n')
+
+        if dump_dict(self.items).sort() == dump_dict(new_dict).sort():
             self.items = new_dict.copy()
             return 0
         else:
             return 1
 
     def add_containers(self, containers):
-        self.items["1"] += containers
+        self.items["1"] += [int(x) for x in containers]
 
     def check_stock(self, request):
         stock = dump_dict(self.items).copy()
@@ -130,8 +133,13 @@ class factoryShop:
 
 class portShop:
     def __init__(self, color_d):
-        self.total_items = 0
         self.items = color_d
+
+    def total_items(self):
+        total = 0
+        for key in self.items:
+            total += len(self.items[key])
+        return total
 
     def check_stock(self, request):
         stock = dump_dict(self.items).copy()
@@ -165,10 +173,11 @@ class portShop:
     def balance(self, prices_l):
         i = 0
         new_dict = {
-            "1": [],
             "2": [],
             "3": [],
-            "4": []
+            "4": [],
+            "5": [],
+            "6": []
         }
 
         for price in self.items:
@@ -177,7 +186,7 @@ class portShop:
             elif prices_l[i] == '':
                 new_dict[price] = []
             else:
-                new_dict[price] = price[i].split().copy()
+                new_dict[price] = [int(x) for x in prices_l[i].split().copy()]
 
             i += 1
 
