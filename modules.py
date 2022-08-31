@@ -67,7 +67,7 @@ class Bank:
 
             total += player.money
             total += 3 * len(player.ship.cargo)
-            total += 2 * dump_dict(player.port.portShop.items)
+            total += 2 * len(dump_dict(player.port.portShop.items))
             total -= 11 * player.debts
 
             totals[str(pid)] = total

@@ -58,8 +58,6 @@ state["pending"][str(pid)] = 0
 
 ui = UI(player)
 
-print(player.get_own_stats())
-
 command_dict = {
     "take": lambda: ui.take_debt(),
     "return": lambda: ui.return_debt(),
@@ -105,6 +103,9 @@ elif turn_type == 2:
 
 
 else:
+
+    print(player.get_own_stats())
+
     bid = None
     game_type = 0
     cargo = []
@@ -136,6 +137,7 @@ else:
             total_score = bank.calculate_endgame()
             state['results'] = total_score
             game_type = 2
+            break
         elif code not in [1, 2]:
             game_type = 1
             secret["doing_auction"] = 1
