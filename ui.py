@@ -222,6 +222,19 @@ class UI:
             self.active_pl.accept_auction(max_tup, cargo)
 
     def move_ship(self):
+        stats = ''
+        stats += '\nShip Zones:\n\n'
+        for i in range(5):
+            stats += f'Zone {i}: '
+            if i < self.active_pl.player_num:
+                stats += f"Player {i}'s port\n"
+            else:
+                stats += 'unavailable\n'
+
+        stats += 'Zone 5: Open sea\nZone 6: Island\n'
+
+        print(stats)
+
         zone = int(input("What zone would you like to move your ship to? "))
         if zone == int(self.active_pl.pid):
             print("Cant purchase from own port.")
@@ -233,7 +246,15 @@ class UI:
             print("You cant move your ship to that zone.")
             return 1
         elif 0 <= code < 5:
-            print(f"Moved ship to player {zone}'s port.")
+            print(f"\nMoved ship to player {zone}'s port.")
+
+            stats = ''
+            stats += '\nPort Shop:\n'
+            for price in self.active_pl.bank.players[code].port.portShop.items:
+                stats += f'\t${price}: {self.active_pl.bank.players[code].port.portShop.items[price]}\n'
+
+            print(stats)
+
             self.purchase_to_s(code)
             return 0
         elif code == 5:
