@@ -1,9 +1,6 @@
-import random
-
 from game import *
 from ui import UI
 import sys
-
 import json
 
 if len(sys.argv) > 1:
