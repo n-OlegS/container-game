@@ -3,19 +3,24 @@ from ui import UI
 import sys
 import json
 
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     if sys.argv[1] == '-generate':
         print(f"Generating new state for {sys.argv[2]} players...\n")
         state = init_state(sys.argv[2])
 else:
-    while 1:
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    else:
         path = input("Enter state path: ")
 
+    while 1:
         try:
+            print("trying")
             file = open(path, 'r')
             break
         except FileNotFoundError:
             print("Invalid file path.")
+            path = input("Enter state path: ")
 
     state = json.load(file)
 
