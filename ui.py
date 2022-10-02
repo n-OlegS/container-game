@@ -77,7 +77,7 @@ class UI:
         if self.active_pl.port.factoryShop.total_items() + self.active_pl.port.get_active_plants()[
             0] > 2 * self.active_pl.port.plant_amount():
             pref = input(
-                "You do not have enough space to manufacture all containers. Enter your preffered colors, seperated by a space: ").split()
+                "You do not have enough space to manufacture all containers. Enter your preffered colors, separated by a space: ").split()
         else:
             pref = None
 
