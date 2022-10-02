@@ -131,6 +131,14 @@ class UI:
             print("Prices assigned!")
 
     def purchase_to_p(self):
+        stats = ""
+
+        for pid in range(self.active_pl.player_num):
+            stats += f'\n\nFactory Shop of player {pid}:\n'
+            for price in self.active_pl.bank.players[pid].port.factoryShop.items:
+                stats += f'\t${price}: {self.active_pl.bank.players[pid].port.factoryShop.items[price]}\n'
+
+        print(stats)
         pid = input("What player do you want to purchase from? ")
         colors = [int(x) for x in
                   input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()]

@@ -15,7 +15,6 @@ else:
 
     while 1:
         try:
-            print("trying")
             file = open(path, 'r')
             break
         except FileNotFoundError:
