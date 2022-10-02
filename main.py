@@ -34,6 +34,7 @@ if state["generated"][str(pid)] == 0:
                 'card': card}
     secret_f = open('secret.json', 'w')
     json.dump(secret_d, secret_f)
+    secret_f.close()
     change_generated = True
 
 players = class_tuple[0]
