@@ -97,7 +97,6 @@ class UI:
             return 4
         else:
             print("Successfully manufactured all containers!")
-            print(self.active_pl.port.factoryShop.items)
             self.balance_f()
             return 0
 

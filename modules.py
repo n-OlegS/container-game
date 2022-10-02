@@ -102,7 +102,6 @@ class Cache:
             return out
 
     def pop(self, order):
-        print('ORDER-', order)
         if isinstance(order, list):
             for elem in order:
                 if elem not in self.containers: raise Exception
@@ -228,8 +227,6 @@ class Player:
         if self.port.factoryShop.total_items() + self.port.get_active_plants()[0] <= 2 * self.port.plant_amount():
             self.bank.transact(int(self.pid), pay_pid, 1)
             package = self.cache.pop(self.port.get_active_plants()[1])
-            print(self.port.get_active_plants()[1])
-            print(package)
             self.port.factoryShop.add_containers(package)
         else:
             if preffered is None or len(
@@ -282,7 +279,6 @@ class Player:
         pid = max_tup[0]
         self.bank.transact(pid, self.pid, max_tup[1])
         self.money += max_tup[1]
-        print(self.bank.island.stock, str(self.pid), cargo)
         self.bank.island.stock[str(self.pid)] += cargo
 
     def decline_auction(self, price, cargo):
@@ -358,7 +354,6 @@ class Player:
 
     def move_ship(self, zone):
         current = self.ship.location
-        print(current, zone)
 
         if current != 5 and zone != 5:
             return -1
