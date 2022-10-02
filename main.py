@@ -48,10 +48,7 @@ secret = json.load(secret_f)
 
 player = players[pid]
 
-print(player.money)
-print(state["pending"][str(pid)])
-print(secret["money"])
-player.money += state["pending"][str(pid)] + secret["money"]
+player.money = state["pending"][str(pid)] + secret["money"]
 player.card = secret["card"]
 state["pending"][str(pid)] = 0
 
