@@ -206,7 +206,7 @@ class UI:
         print(stats)
 
         bid = input(
-            f"How much money are you willing to bid for containers: {colors}? Type take to take a debt. You have ${self.active_pl.money}")
+            f'How much money are you willing to bid for containers: {colors}? \nType "take" to take a debt. You have ${self.active_pl.money}: ')
         if bid == "take":
             self.take_debt()
             self.auction_req(colors)

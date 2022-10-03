@@ -165,4 +165,5 @@ output["turn"] = turn
 output["auction cargo"] = cargo
 if change_generated: output["generated"][str(player.pid)] = 1
 json.dump(output, open(f'{turn}.json', 'w'), indent=4)
+print(f"Created {turn}.json!")
 json.dump(secret, open('secret.json', 'w'))
