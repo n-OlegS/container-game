@@ -183,6 +183,12 @@ class UI:
 
     def auction_req(self, colors):
         print(f"You are: {self.active_pl.pid}")
+
+        stats = ''
+        stats += f'\nYour card:\n\t$10: {self.active_pl.card[0]}\n\t$5/10: {self.active_pl.card[1]}\n\t$6: {self.active_pl.card[2]}\n\t'
+        stats += f'$4: {self.active_pl.card[3]}\n\t$2: {self.active_pl.card[4]}\n'
+        print(stats)
+
         bid = input(
             f"How much money are you willing to bid for containers: {colors}? Type take to take a debt. You have ${self.active_pl.money}")
         if bid == "take":

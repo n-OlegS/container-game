@@ -18,7 +18,8 @@ else:
             file = open(path, 'r')
             break
         except FileNotFoundError:
-            print("Invalid file path.")
+            if path:
+                print("Invalid file path.")
             path = input("Enter state path: ")
 
     state = json.load(file)
