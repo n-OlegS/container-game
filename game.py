@@ -120,6 +120,7 @@ def init_state(player_num):
     state["turn"] = 1
     state["playernum"] = player_num
     state['secret'] = []
+    state["log"] = []
     state['results'] = {}
     state["pending"] = {}
     state["entities"] = {}

@@ -1,4 +1,5 @@
 from modules import *
+from logger import Logger
 
 
 class UI:
@@ -8,14 +9,16 @@ class UI:
             2 - OK, no need to deduct turn
             """
 
-    def __init__(self, active_pl: Player):
+    def __init__(self, active_pl: Player, logger: Logger):
         self.active_pl = active_pl
+        self.logger = logger
 
     def take_debt(self):
         code = self.active_pl.take_debt()
 
         if code == 0:
             print("Debt taken.")
+            self.logger.log_debt_taken()
             return 2
         else:
             print("Failed to take debt. Exceeded Maximum amount of debts.")
@@ -40,6 +43,7 @@ class UI:
             return 1
         else:
             print("Returned 1 debt for 11 dollars.")
+            self.logger.log_debt_returned()
             return 2
 
     def purchase_warehouse(self):
@@ -47,6 +51,7 @@ class UI:
 
         if code == 0:
             print("Warehouse purchased.")
+            self.logger.log_warehouse_purchased()
             return 0
         elif code == 1:
             print("Maximum amount of warehouses reached.")
@@ -61,6 +66,7 @@ class UI:
 
         if code == 0:
             print("Plant purchased.")
+            self.logger.log_plant_purchased(color)
             return 0
         elif code == 1:
             print("Maximum amount of plants reached.")
@@ -97,6 +103,13 @@ class UI:
             return 4
         else:
             print("Successfully manufactured all containers!")
+
+            if pref is None:
+                colors = self.active_pl.port.get_active_plants()[1]
+            else:
+                colors = pref
+
+            self.logger.log_manufactured(colors)
             self.balance_f()
             return 0
 
@@ -154,7 +167,7 @@ class UI:
         code = self.active_pl.purchase_to_p(pid, colors)
 
         if code == 1:
-            print("Invalid container colors.")
+            print("Invalid container colors/Containers not in stock.")
             return 1
         elif code == 2:
             print("Not enough money.")
@@ -164,6 +177,8 @@ class UI:
             return 1
         elif code == 0:
             print("Containers purchased!")
+
+            self.logger.log_purchased_to_p(pid, colors)
             self.balance_p()
             return 0
 
@@ -179,6 +194,7 @@ class UI:
             print("Not enough money.")
             self.purchase_to_s(pid)
         elif code == 0:
+            self.logger.log_purchased_to_s(pid, colors)
             print("Containers purchased!")
 
     def auction_req(self, colors):
@@ -268,10 +284,12 @@ class UI:
 
             print(stats)
 
+            self.logger.log_moved_ship(code)
             self.purchase_to_s(code)
             return 0
         elif code == 5:
             print("Moved ship to the open sea.")
+            self.logger.log_moved_ship(5)
             return 0
         elif code == 6:
             conf = input(
@@ -293,6 +311,8 @@ class UI:
         print("\tpurchase: purchase containers from somebody's factory shop")
         print('\twarehouse: purchase a warehouse\n\tplant: purchase a plant')
         print('\tmove: move your ship from one zone to another\n\tstats: show the game state\n\thelp: show this text\n')
+        print('\tlog: show the last 2 turns')
+        print('\tLog: show the full log')
 
         return 2
 

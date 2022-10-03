@@ -1,5 +1,6 @@
 from game import *
 from ui import UI
+from logger import Logger
 import sys
 import json
 
@@ -57,9 +58,11 @@ player.money = state["pending"][str(pid)] + secret["money"]
 player.card = secret["card"]
 state["pending"][str(pid)] = 0
 
+logger = Logger(state, pid)
+
 # Begin command loop
 
-ui = UI(player)
+ui = UI(player, logger)
 
 command_dict = {
     "take": lambda: ui.take_debt(),
@@ -71,6 +74,8 @@ command_dict = {
     "warehouse": lambda: ui.purchase_warehouse(),
     "plant": lambda: ui.purchase_plant(),
     "stats": lambda: ui.stats(),
+    "log": lambda: logger.display_short(),
+    "Log": lambda: logger.display_full(),
     "r": lambda: 0,
     "?": lambda: ui.help(),
     "help": lambda: ui.help(),
@@ -148,6 +153,7 @@ else:
             break
 players[pid] = player
 tup = (players, cache, island, bank)
+logger.write(state)
 
 output = package(game_type, tup, bid, player.pid, state)
 
