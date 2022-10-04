@@ -72,7 +72,6 @@ class factoryShop:
 
     def balance(self, prices_l):
         i = 0
-        print(prices_l)
         new_dict = {
             "1": [],
             "2": [],
@@ -90,9 +89,9 @@ class factoryShop:
 
             i += 1
 
-        print('\n\n', self.items, new_dict, dump_dict(self.items), dump_dict(new_dict), '\n')
+        # print('\n\n', self.items, new_dict, list(dump_dict(self.items)).sort(), list(dump_dict(new_dict)).sort(), '\n')
 
-        if dump_dict(self.items).sort() == dump_dict(new_dict).sort():
+        if sorted(dump_dict(self.items)) == sorted(dump_dict(new_dict)):
             self.items = new_dict.copy()
             return 0
         else:
