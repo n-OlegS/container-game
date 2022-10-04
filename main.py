@@ -38,7 +38,7 @@ if state["generated"][str(pid)] == 0:
     state['card list'].remove(card)
     state['secret'].append(state['card list copy'].index(card))
     secret_d = {'money': 20, 'doing_auction': 0,
-                'card': card}
+                'card': card, 'pid': int(pid)}
     secret_f = open('secret.json', 'w')
     json.dump(secret_d, secret_f)
     secret_f.close()
@@ -54,6 +54,10 @@ secret_f = open('secret.json', 'r')
 secret = json.load(secret_f)
 
 player = players[pid]
+
+if pid != secret["pid"]:
+    print("Not your turn!")
+    quit()
 
 player.money = state["pending"][str(pid)] + secret["money"]
 player.card = secret["card"]
