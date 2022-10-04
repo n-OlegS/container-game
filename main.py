@@ -161,7 +161,7 @@ players[pid] = player
 tup = (players, cache, island, bank)
 logger.write(state)
 
-output = package(game_type, tup, bid, player.pid, state, change_pid=(not change_generated))
+output = package(game_type, tup, bid, player.pid, state, change_pid=(not auction_completed))
 
 secret["money"] = player.money
 output["pending"][str(player.pid)] = 0
