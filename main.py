@@ -31,6 +31,7 @@ class_tuple = parse(state)
 
 pid = state["pid"]
 change_generated = False
+auction_completed = False
 
 if state["generated"][str(pid)] == 0:
     card = random.choice(state['card list'])
@@ -103,6 +104,7 @@ if turn_type == 1:
         state["auction cargo"] = []
         state["bids"] = {}
         secret["doing_auction"] = 0
+        auction_completed = True
 
 
 elif turn_type == 2:
@@ -155,7 +157,7 @@ players[pid] = player
 tup = (players, cache, island, bank)
 logger.write(state)
 
-output = package(game_type, tup, bid, player.pid, state)
+output = package(game_type, tup, bid, player.pid, state, change_pid=(not change_generated))
 
 secret["money"] = player.money
 output["pending"][str(player.pid)] = 0

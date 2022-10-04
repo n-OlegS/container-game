@@ -24,7 +24,7 @@ def parse(state: dict):
     return players, cache, island, bank
 
 
-def package(game_type, class_tuple, bid, pid, old_state):
+def package(game_type, class_tuple, bid, pid, old_state, change_pid=True):
     print("PACKAGING WITH PID", pid, game_type)
     players = class_tuple[0]
     cache = class_tuple[1]
@@ -74,8 +74,10 @@ def package(game_type, class_tuple, bid, pid, old_state):
         state["entities"][str(i)] = p_dict
 
     pid = int(pid)
-    pid += 1
-    if pid == len(players): pid = 0
+
+    if change_pid:
+        pid += 1
+        if pid == len(players): pid = 0
 
     state["pid"] = pid
 
