@@ -25,7 +25,7 @@ def parse(state: dict):
 
 
 def package(game_type, class_tuple, bid, pid, old_state, change_pid=True):
-    print("PACKAGING WITH PID", pid, game_type)
+    print("\nPACKAGING WITH PID", pid, game_type, '\n')
     players = class_tuple[0]
     cache = class_tuple[1]
     island = class_tuple[2]
