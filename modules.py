@@ -312,6 +312,12 @@ class Player:
 
         stats += f'\nWarehouses left: {self.cache.warehouses}\n'
 
+        stats += '\n-----ISLAND STATS-----'
+
+        for pid in range(self.player_num):
+            stats += f'\nPlayer {pid}:\n\t'
+            stats += '\n\t'.join(f'{x}: {self.bank.island.stock[str(pid)].count(x)}' for x in range(5))
+
         stats += '\n--------PORT STATS--------'
 
         for pid in range(self.player_num):

@@ -37,7 +37,8 @@ class Logger:
             f"Purchased containers {', '.join([str(x) for x in colors])} from player {pid}'s factory shop.")
 
     def log_purchased_to_s(self, pid, colors):
-        self.current_log.append(f"Purchased containers of colors {', '.join(colors)} from player {pid}'s port shop.")
+        self.current_log.append(
+            f"Purchased containers of colors {', '.join([str(x) for x in colors])} from player {pid}'s port shop.")
 
     def log_moved_ship(self, zone):
         if zone == 5:
