@@ -234,6 +234,7 @@ class UI:
 
         if conf == 'y':
             self.active_pl.accept_auction(max_tup, cargo)
+            self.logger.log_auction_finished(self.active_pl.pid, max_tup[0], cargo, max_tup[1])
         elif conf == 'n':
             self.decline_auction(max_tup, cargo)
         else:
@@ -245,10 +246,12 @@ class UI:
 
         if code == 0:
             print("Auction declined")
+            self.logger.log_auction_finished(self.active_pl.pid, self.active_pl.pid, cargo, max_tup[1])
             return 0
         else:
             print("Cant decline auction: not enough money.")
             self.active_pl.accept_auction(max_tup, cargo)
+            self.logger.log_auction_finished(self.active_pl.pid, max_tup[0], cargo, max_tup[1])
 
     def move_ship(self):
         stats = ''

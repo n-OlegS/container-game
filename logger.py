@@ -47,3 +47,7 @@ class Logger:
             self.current_log.append("Moved ship to the island. Started auction")
         else:
             self.current_log.append(f"Moved ship to player {zone}'s port")
+
+    def log_auction_finished(self, seller, buyer, containers, price):
+        self.current_log.append(
+            f"Player {buyer} acquired containers {', '.join([str(x) for x in containers])} from player {seller} for ${price}!")
