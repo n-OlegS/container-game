@@ -184,7 +184,7 @@ class UI:
 
     def purchase_to_s(self, pid):
         colors = [int(x) for x in
-                  input("What colors do you want to purchase? Enter the colors, seperated by a space: ").split()]
+                  input("What colors do you want to purchase? Enter the colors, separated by a space: ").split()]
         code = self.active_pl.purchase_to_s(pid, colors)
 
         if code == 1:
@@ -256,7 +256,11 @@ class UI:
         for i in range(5):
             stats += f'Zone {i}: '
             if i < self.active_pl.player_num:
-                stats += f"Player {i}'s port\n"
+                stats += f"Player {i}'s port:\n"
+                for price in self.active_pl.bank.players[i].port.portShop.items:
+                    stats += f'\t${price}: {self.active_pl.bank.players[i].port.portShop.items[price]}\n'
+
+                stats += '\n'
             else:
                 stats += 'unavailable\n'
 
@@ -267,6 +271,9 @@ class UI:
         zone = int(input("What zone would you like to move your ship to? "))
         if zone == int(self.active_pl.pid):
             print("Cant purchase from own port.")
+            return 1
+        elif self.active_pl.player_num <= zone <= 4:
+            print("That zone is unavailable.")
             return 1
 
         code = int(self.active_pl.move_ship(zone))
