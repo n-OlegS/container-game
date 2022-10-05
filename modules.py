@@ -279,7 +279,7 @@ class Player:
         pid = max_tup[0]
         self.bank.transact(pid, self.pid, max_tup[1])
         self.money += max_tup[1]
-        self.bank.island.stock[str(self.pid)] += cargo
+        self.bank.island.stock[str(pid)] += cargo
 
     def decline_auction(self, price, cargo):
         if self.money < price: return 1
