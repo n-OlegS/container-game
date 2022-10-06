@@ -318,7 +318,7 @@ class Player:
             stats += f'\nPlayer {pid}:\n\t'
             stats += '\n\t'.join(f'{x}: {self.bank.island.stock[str(pid)].count(x)}' for x in range(5))
 
-        stats += '\n--------PORT STATS--------'
+        stats += '\n\n--------PORT STATS--------'
 
         for pid in range(self.player_num):
             stats += f'\n\nPort of player {pid} stats\n'
