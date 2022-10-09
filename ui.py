@@ -226,7 +226,7 @@ class UI:
 
     def auction_do(self, max_tup, cargo):
         conf = input(
-            f"Are you willing to accept ${max_tup[1]} from player {max_tup[0]} for cargo {cargo}? y/n, take to take debt")
+            f"Are you willing to accept ${max_tup[1]} from player {max_tup[0]} for cargo {cargo}? y/n, take to take debt: ")
 
         if conf == "take":
             self.take_debt()

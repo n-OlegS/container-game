@@ -103,7 +103,7 @@ if turn_type == 1:
             if not isinstance(state["bids"][au_pid], int): continue
             if state["bids"][au_pid] > maxx[1]:
                 maxx = (au_pid, state["bids"][au_pid])
-
+        ui.stats()
         ui.auction_do(maxx, state["auction cargo"])
         state["auction cargo"] = []
         state["bids"] = {}
