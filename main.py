@@ -4,8 +4,6 @@ from logger import Logger
 import sys
 import json
 
-# Test!
-
 if len(sys.argv) > 2:
     if sys.argv[1] == '-generate':
         print(f"Generating new state for {sys.argv[2]} players...\n")
